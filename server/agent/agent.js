@@ -42,32 +42,16 @@ const multiplytool = tool(
   }
 );
 
-//Helper function to capture output of code execution
-async function evalAndCaptureOutput(code) {
-  const oldLog = console.log;
-  const oldError = console.error;
-
-  const output = [];
-  let errorOutput = [];
-
-  console.log = (...args) => output.push(args.join(" "));
-  console.error = (...args) => errorOutput.push(args.join(" "));
-
-  try {
-    await eval(code);
-  } catch (error) {
-    errorOutput.push(error.message);
-  }
-
-  console.log = oldLog;
-  console.error = oldError;
-
-  return { stdout: output.join("\n"), stderr: errorOutput.join("\n") };
-}
-
 const jsExecutor = tool(
   async ({ code }) => {
-    const result = await evalAndCaptureOutput(code);
+    const response = await fetch(`${process.env.EXECUTOR_URL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code }),
+    });
+    const result = await response.json();
     return result;
   },
   {
