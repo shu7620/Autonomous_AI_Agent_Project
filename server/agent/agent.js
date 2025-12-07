@@ -8,7 +8,7 @@ import { MemorySaver } from "@langchain/langgraph";
 config();
 
 const model = new ChatGoogleGenerativeAI({
-  model: "gemini-2.5-flash",
+  model: "gemini-2.5-flash-lite",
 });
 
 const checkpoint = new MemorySaver();
